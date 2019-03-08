@@ -69,7 +69,7 @@ namespace DeathRace.Controllers
             _context.Drivers.Add(driver);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetDriver), new { DriverId = driver.DriverId }, driver);
+            return CreatedAtAction(nameof(GetDriver), new { id = driver.DriverId }, driver);
         }
 
         // PUT api/values/5
