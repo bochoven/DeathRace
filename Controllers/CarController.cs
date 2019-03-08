@@ -49,7 +49,8 @@ namespace DeathRace.Controllers
             var driver = _context.Drivers.SingleOrDefault(m => m.DriverId == car.DriverId);
             if (driver == null)
             {
-                return BadRequest();
+                ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
+                return BadRequest(ModelState);
             }
  
             _context.Cars.Add(car);
@@ -64,6 +65,14 @@ namespace DeathRace.Controllers
             if (id != car.CarId)
             {
                 return BadRequest();
+            }
+
+            // Niet DRY moet dit in een helper? Of een private method van de CarController?
+            var driver = _context.Drivers.SingleOrDefault(m => m.DriverId == car.DriverId);
+            if (driver == null)
+            {
+                ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
+                return BadRequest(ModelState);
             }
 
             _context.Entry(car).State = EntityState.Modified;
