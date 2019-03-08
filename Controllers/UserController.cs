@@ -20,15 +20,18 @@ namespace DeathRace.Controllers
 
           if (_context.Drivers.Count() == 0)
           {
-              _context.Drivers.Add(new Driver { 
+              _context.Drivers.Add(new Driver {
                 GivenName = "Matilda",
                 Preposition = "the",
-                LastName = "Hun"
+                LastName = "Hun",
+                DOB = DateTime.Parse("1969-04-05")
               });
               _context.SaveChanges();
-              
-              _context.Cars.Add(new Car { 
+
+              _context.Cars.Add(new Car {
                 Brand = "Mercedes",
+                Model = "GLK",
+                Type = "350",
                 Year = 1998,
                 DriverId = 1
               });
