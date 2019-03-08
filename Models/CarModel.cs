@@ -10,6 +10,7 @@ namespace DeathRace.Models
         public string Brand { get; set; }
         public string Model { get; set; }
         public string Type { get; set; }
+        [Range(1900, 3000)]
         public int Year { get; set; }
 
         public int UserId { get; set; }
