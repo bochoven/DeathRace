@@ -20,14 +20,14 @@ namespace DeathRace.Controllers
 
         }
 
-        // GET api/values
+        // GET api/car
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Car>>> GetCars()
         {
             return await _context.Cars.Include(i => i.User).ToListAsync();
         }
 
-        // GET api/values/5
+        // GET api/car/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Car>> GetCar(int id)
         {
@@ -42,32 +42,37 @@ namespace DeathRace.Controllers
             return Car;
         }
 
-        // POST api/values
+        // POST api/car
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(Car user)
+        public async Task<ActionResult<Car>> PostCar(Car car)
         {
-            _context.Cars.Add(user);
+            var user = _context.Users.SingleOrDefault(m => m.UserId == car.UserId);
+            if (user == null)
+            {
+                return BadRequest();
+            }
+ 
+            _context.Cars.Add(car);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetCar), new { CarId = user.CarId }, user);
+            return CreatedAtAction(nameof(GetCar), new { id = car.CarId }, car);
         }
 
-        // PUT api/values/5
+        // PUT api/car/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, Car user)
+        public async Task<IActionResult> PutCar(int id, Car car)
         {
-            if (id != user.CarId)
+            if (id != car.CarId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(car).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // DELETE api/values/5
+        // DELETE api/car/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
