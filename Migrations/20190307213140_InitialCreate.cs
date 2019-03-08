@@ -8,10 +8,10 @@ namespace DeathRace.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Drivers",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false)
+                    DriverId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     GivenName = table.Column<string>(nullable: false),
                     Preposition = table.Column<string>(nullable: true),
@@ -20,7 +20,7 @@ namespace DeathRace.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_Drivers", x => x.DriverId);
                 });
 
             migrationBuilder.CreateTable(
@@ -33,23 +33,23 @@ namespace DeathRace.Migrations
                     Model = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
                     Year = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    DriverId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cars", x => x.CarId);
                     table.ForeignKey(
-                        name: "FK_Cars_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
+                        name: "FK_Cars_Drivers_DriverId",
+                        column: x => x.DriverId,
+                        principalTable: "Drivers",
+                        principalColumn: "DriverId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cars_UserId",
+                name: "IX_Cars_DriverId",
                 table: "Cars",
-                column: "UserId");
+                column: "DriverId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -58,7 +58,7 @@ namespace DeathRace.Migrations
                 name: "Cars");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Drivers");
         }
     }
 }

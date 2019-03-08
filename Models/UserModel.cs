@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DeathRace.Models
 {
-    public class User
+    public class Driver
     {
-        public int UserId { get; set; }
+        public int DriverId { get; set; }
         [Required(ErrorMessage = "Required")]
         public string GivenName { get; set; }
         public string Preposition { get; set; }

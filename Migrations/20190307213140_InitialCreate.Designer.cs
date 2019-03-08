@@ -29,20 +29,20 @@ namespace DeathRace.Migrations
 
                     b.Property<string>("Type");
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("DriverId");
 
                     b.Property<int>("Year");
 
                     b.HasKey("CarId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("DriverId");
 
                     b.ToTable("Cars");
                 });
 
-            modelBuilder.Entity("DeathRace.Models.User", b =>
+            modelBuilder.Entity("DeathRace.Models.Driver", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("DriverId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DOB");
@@ -55,16 +55,16 @@ namespace DeathRace.Migrations
 
                     b.Property<string>("Preposition");
 
-                    b.HasKey("UserId");
+                    b.HasKey("DriverId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Drivers");
                 });
 
             modelBuilder.Entity("DeathRace.Models.Car", b =>
                 {
-                    b.HasOne("DeathRace.Models.User", "User")
+                    b.HasOne("DeathRace.Models.Driver", "Driver")
                         .WithMany("Cars")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

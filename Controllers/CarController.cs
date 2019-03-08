@@ -24,14 +24,14 @@ namespace DeathRace.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Car>>> GetCars()
         {
-            return await _context.Cars.Include(i => i.User).ToListAsync();
+            return await _context.Cars.Include(i => i.Driver).ToListAsync();
         }
 
         // GET api/car/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Car>> GetCar(int id)
         {
-            var Car = await _context.Cars.Include(i => i.User)
+            var Car = await _context.Cars.Include(i => i.Driver)
                 .FirstOrDefaultAsync(i => i.CarId == id);
 
             if (Car == null)
@@ -46,8 +46,8 @@ namespace DeathRace.Controllers
         [HttpPost]
         public async Task<ActionResult<Car>> PostCar(Car car)
         {
-            var user = _context.Users.SingleOrDefault(m => m.UserId == car.UserId);
-            if (user == null)
+            var driver = _context.Drivers.SingleOrDefault(m => m.DriverId == car.DriverId);
+            if (driver == null)
             {
                 return BadRequest();
             }

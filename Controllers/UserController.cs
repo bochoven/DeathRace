@@ -10,17 +10,17 @@ namespace DeathRace.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class DriverController : ControllerBase
     {
         private readonly DeathRaceContext _context;
 
-        public UserController(DeathRaceContext context)
+        public DriverController(DeathRaceContext context)
         {
           _context = context;
 
-          if (_context.Users.Count() == 0)
+          if (_context.Drivers.Count() == 0)
           {
-              _context.Users.Add(new User { 
+              _context.Drivers.Add(new Driver { 
                 GivenName = "Matilda",
                 Preposition = "the",
                 LastName = "Hun"
@@ -30,7 +30,7 @@ namespace DeathRace.Controllers
               _context.Cars.Add(new Car { 
                 Brand = "Mercedes",
                 Year = 1998,
-                UserId = 1
+                DriverId = 1
               });
               _context.SaveChanges();
 
@@ -39,46 +39,46 @@ namespace DeathRace.Controllers
 
         // GET api/values
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            return await _context.Users.Include(i => i.Cars).ToListAsync();
+            return await _context.Drivers.Include(i => i.Cars).ToListAsync();
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<Driver>> GetDriver(int id)
         {
-            var User = await _context.Users.Include(i => i.Cars)
-                .FirstOrDefaultAsync(i => i.UserId == id);
+            var Driver = await _context.Drivers.Include(i => i.Cars)
+                .FirstOrDefaultAsync(i => i.DriverId == id);
 
-            if (User == null)
+            if (Driver == null)
             {
                 return NotFound();
             }
 
-            return User;
+            return Driver;
         }
 
         // POST api/values
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<Driver>> PostDriver(Driver driver)
         {
-            _context.Users.Add(user);
+            _context.Drivers.Add(driver);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), new { UserId = user.UserId }, user);
+            return CreatedAtAction(nameof(GetDriver), new { DriverId = driver.DriverId }, driver);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> PutDriver(int id, Driver driver)
         {
-            if (id != user.UserId)
+            if (id != driver.DriverId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            _context.Entry(driver).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -86,16 +86,16 @@ namespace DeathRace.Controllers
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> DeleteDriver(int id)
         {
-            var User = await _context.Users.FindAsync(id);
+            var Driver = await _context.Drivers.FindAsync(id);
 
-            if (User == null)
+            if (Driver == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(User);
+            _context.Drivers.Remove(Driver);
             await _context.SaveChangesAsync();
 
             return NoContent();
