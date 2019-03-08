@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using DeathRace.Models;
 
 namespace DeathRace.Controllers
-{
+{    
     [Route("api/[controller]")]
     [ApiController]
     public class CarController : ControllerBase
@@ -22,9 +22,18 @@ namespace DeathRace.Controllers
 
         // GET api/car
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars()
+        public async Task<ActionResult<IEnumerable<Car>>> GetCars(int? startyear)
         {
-            return await _context.Cars.Include(i => i.Driver).ToListAsync();
+            var cars = from c in _context.Cars
+               select c;
+
+            if (startyear != null)
+            {
+                return await cars.Where(c => c.Year >= startyear)
+                    .Include(i => i.Driver).ToListAsync();
+            }
+
+            return await cars.Include(i => i.Driver).ToListAsync();
         }
 
         // GET api/car/5
