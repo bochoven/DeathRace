@@ -11,49 +11,47 @@ namespace DeathRace.Controllers
     [ApiController]
     public class DriverController : ControllerBase
     {
-        private readonly DeathRaceContext _context;
-        private readonly IDriverRepository _service;
+        private readonly IDriverRepository DriverRepo;
 
-        public DriverController(DeathRaceContext context, IDriverRepository service)
+        public DriverController(DeathRaceContext context, IDriverRepository _repo)
         {
-          _context = context;
-          _service = service;
+          DriverRepo = _repo;
         }
 
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            var drivers = _service.GetAllDrivers();
+            var drivers = await DriverRepo.GetAllDrivers();
             return Ok(drivers);
-
-            // return await _context.Drivers.Include(i => i.Cars).ToListAsync();
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Driver>> GetDriver(int id)
+        [HttpGet("{id}", Name = "GetDriver")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var Driver = await _context.Drivers.Include(i => i.Cars)
-                .FirstOrDefaultAsync(i => i.DriverId == id);
-
-            if (Driver == null)
+            var driver = await DriverRepo.GetById(id);
+            if (driver == null)
             {
                 return NotFound();
             }
-
-            return Driver;
+            return Ok(driver);
         }
 
         // POST api/values
         [HttpPost]
         public async Task<ActionResult<Driver>> PostDriver(Driver driver)
         {
-            _context.Drivers.Add(driver);
-            await _context.SaveChangesAsync();
+            if (driver == null)
+            {
+                return BadRequest();
+            }
+            await DriverRepo.Add(driver);
+            return CreatedAtRoute("GetDriver", new { id = driver.DriverId }, driver);
 
-            return CreatedAtAction(nameof(GetDriver), new { id = driver.DriverId }, driver);
+            // return CreatedAtRoute("GetContacts", new { Controller = "Contacts", id = item.MobilePhone }, item);
         }
+
 
         // PUT api/values/5
         [HttpPut("{id}")]
@@ -64,26 +62,17 @@ namespace DeathRace.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(driver).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            // _context.Entry(driver).State = EntityState.Modified;
+            // await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDriver(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var Driver = await _context.Drivers.FindAsync(id);
-
-            if (Driver == null)
-            {
-                return NotFound();
-            }
-
-            _context.Drivers.Remove(Driver);
-            await _context.SaveChangesAsync();
-
+            await DriverRepo.Remove(id);
             return NoContent();
         }
     }

@@ -27,19 +27,31 @@ namespace DeathRace.Repository
            return await _context.Drivers.Include(i => i.Cars).ToListAsync();
         }
 
-        public async Task GetById(int id)
-                {
-            throw new NotImplementedException();
+        public async Task<Driver> GetById(int id)
+        {
+            return await _context.Drivers
+                      .FirstOrDefaultAsync(i => i.DriverId == id);
+            //return await _context.Drivers.Include(i => i.Cars)
+                      //.FirstOrDefaultAsync(i => i.DriverId == id);
         }
         
         public async Task UpdateById(int id)
         {
-            throw new NotImplementedException();
+            // _context.Drivers.Add(driver);
+            // await _context.SaveChangesAsync();
+            // 
+            // return CreatedAtAction(nameof(GetDriver), new { id = driver.DriverId }, driver);
+
         }
-     
+        
         public async Task Remove(int id)
         {
-            throw new NotImplementedException();
+            var itemToRemove = await _context.Drivers.SingleOrDefaultAsync(i => i.DriverId == id);
+            if (itemToRemove != null)
+            {
+                _context.Drivers.Remove(itemToRemove);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
