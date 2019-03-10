@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
-using System;
 using System.Threading.Tasks;
 using DeathRace.Models;
+using DeathRace.Repository;
 
 namespace DeathRace.Controllers
 {
@@ -13,38 +12,22 @@ namespace DeathRace.Controllers
     public class DriverController : ControllerBase
     {
         private readonly DeathRaceContext _context;
+        private readonly IDriverRepository _service;
 
-        public DriverController(DeathRaceContext context)
+        public DriverController(DeathRaceContext context, IDriverRepository service)
         {
           _context = context;
-
-          if (_context.Drivers.Count() == 0)
-          {
-              _context.Drivers.Add(new Driver {
-                GivenName = "Matilda",
-                Preposition = "the",
-                LastName = "Hun",
-                DOB = DateTime.Parse("1969-04-05")
-              });
-              _context.SaveChanges();
-
-              _context.Cars.Add(new Car {
-                Brand = "Mercedes",
-                Model = "GLK",
-                Type = "350",
-                Year = 1998,
-                DriverId = 1
-              });
-              _context.SaveChanges();
-
-          }
+          _service = service;
         }
 
         // GET api/values
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            return await _context.Drivers.Include(i => i.Cars).ToListAsync();
+            var drivers = _service.GetAllDrivers();
+            return Ok(drivers);
+
+            // return await _context.Drivers.Include(i => i.Cars).ToListAsync();
         }
 
         // GET api/values/5

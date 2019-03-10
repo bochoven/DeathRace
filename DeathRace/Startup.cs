@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
 using DeathRace.Models;
+using DeathRace.Repository;
 
 namespace DeathRace
 {
@@ -39,6 +40,8 @@ namespace DeathRace
             var connection = "Data Source=deathrace.db";
             services.AddDbContext<DeathRaceContext>
                 (options => options.UseSqlite(connection));
+            
+            services.AddScoped<IDriverRepository, DriverRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
               .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
