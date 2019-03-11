@@ -23,7 +23,7 @@ namespace DeathRace.Tests
         // }
 
         [Fact]
-        public async Task Index_ReturnsAViewResult_WithAListOfBrainstormSessions()
+        public async Task GetAllDriversReturnsAListWithTwoEntries()
         {
             // Arrange
             var mockRepo = new Mock<IDriverRepository>();
@@ -32,20 +32,15 @@ namespace DeathRace.Tests
             var controller = new DriverController(mockRepo.Object);
 
             // Act
-            var result = await controller.GetDrivers();
+            var actionResult = await controller.GetDrivers();
 
             // Assert
-            Assert.IsType<ActionResult<IEnumerable<Driver>>>(result);
-            Assert.IsType<OkObjectResult>(result.Result);
-            var data = (IEnumerable<Driver>) result.Result;
-            Assert.Equal(2, data.Count());
-            //
-            // var model = Assert.IsAssignableFrom<IEnumerable<Driver>>(
-            //     actionResult.ViewData.Model);
-            //var result = Assert.IsAssignableFrom
-            //var model = Assert.IsAssignableFrom<IEnumerable<Driver>>(
-                //actionResult);
-           // Assert.Equal(2, actionResult.Result.Value.Count());
+            Assert.NotNull(actionResult);
+            var okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okObjectResult);
+            var model = okObjectResult.Value as List<Driver>;
+            Assert.NotNull(model);
+            Assert.Equal(2, model.Count);
         }
 
         private List<Driver> GetTestDrivers()
