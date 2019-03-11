@@ -46,7 +46,7 @@ namespace DeathRace.Controllers
                 return BadRequest();
             }
             await DriverRepo.Add(driver);
-            return CreatedAtRoute("GetDriver", new { id = driver.DriverId }, driver);
+            return CreatedAtAction("GetDriver", new { id = driver.DriverId }, driver);
         }
 
         // PUT api/driver
