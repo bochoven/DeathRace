@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using DeathRace.Models;
 
-namespace DeathRace.Models
+namespace DeathRace.Contexts
 {
     public class DeathRaceContext : DbContext
     {

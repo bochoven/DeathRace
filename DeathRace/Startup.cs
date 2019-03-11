@@ -14,6 +14,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.EntityFrameworkCore;
 using DeathRace.Models;
 using DeathRace.Repository;
+using DeathRace.Contexts;
 
 namespace DeathRace
 {

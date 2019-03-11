@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using DeathRace.Models;
+using DeathRace.Contexts;
 
 namespace DeathRace.Controllers
 {    

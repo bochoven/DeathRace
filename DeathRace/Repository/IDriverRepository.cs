@@ -10,6 +10,6 @@ namespace DeathRace.Repository
         Task<IEnumerable<Driver>> GetAllDrivers();
         Task<Driver> GetById(int id);
         Task Remove(int id);
-        Task UpdateById(int id);
+        Task UpdateById(int id, Driver driver);
     }
 }

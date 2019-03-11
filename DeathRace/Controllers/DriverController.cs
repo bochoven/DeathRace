@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeathRace.Models;
+using DeathRace.Contexts;
 using DeathRace.Repository;
 
 namespace DeathRace.Controllers
@@ -18,7 +18,7 @@ namespace DeathRace.Controllers
           DriverRepo = _repo;
         }
 
-        // GET api/values
+        // GET api/driver
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
@@ -26,7 +26,7 @@ namespace DeathRace.Controllers
             return Ok(drivers);
         }
 
-        // GET api/values/5
+        // GET api/driver/5
         [HttpGet("{id}", Name = "GetDriver")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -38,7 +38,7 @@ namespace DeathRace.Controllers
             return Ok(driver);
         }
 
-        // POST api/values
+        // POST api/val   ues
         [HttpPost]
         public async Task<ActionResult<Driver>> PostDriver(Driver driver)
         {
@@ -48,27 +48,29 @@ namespace DeathRace.Controllers
             }
             await DriverRepo.Add(driver);
             return CreatedAtRoute("GetDriver", new { id = driver.DriverId }, driver);
-
-            // return CreatedAtRoute("GetContacts", new { Controller = "Contacts", id = item.MobilePhone }, item);
         }
 
-
-        // PUT api/values/5
+        // PUT api/driver
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDriver(int id, Driver driver)
+        public async Task<ActionResult<Driver>> Update(int id, [FromBody] Driver driver)
         {
             if (id != driver.DriverId)
             {
                 return BadRequest();
             }
-
-            // _context.Entry(driver).State = EntityState.Modified;
-            // await _context.SaveChangesAsync();
-
+            var driverObj = await DriverRepo.GetById(id);
+            if (driverObj == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                await DriverRepo.UpdateById(id, driver);
+            }
             return NoContent();
         }
 
-        // DELETE api/values/5
+        // DELETE api/driver/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
