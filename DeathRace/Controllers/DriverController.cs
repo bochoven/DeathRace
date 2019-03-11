@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeathRace.Models;
-using DeathRace.Contexts;
 using DeathRace.Repository;
 
 namespace DeathRace.Controllers
@@ -13,7 +12,7 @@ namespace DeathRace.Controllers
     {
         private readonly IDriverRepository DriverRepo;
 
-        public DriverController(DeathRaceContext context, IDriverRepository _repo)
+        public DriverController(IDriverRepository _repo)
         {
           DriverRepo = _repo;
         }
