@@ -5,7 +5,7 @@ using System.Linq;
 using System;
 using System.Threading.Tasks;
 using DeathRace.Models;
-using DeathRace.Contexts;
+using DeathRace.Repository;
 
 namespace DeathRace.Controllers
 {    
@@ -13,81 +13,82 @@ namespace DeathRace.Controllers
     [ApiController]
     public class CarController : ControllerBase
     {
-        private readonly DeathRaceContext _context;
+        private readonly ICarRepository CarRepo;
+        private readonly IDriverRepository DriverRepo;
 
-        public CarController(DeathRaceContext context)
+        public CarController(ICarRepository _repo, IDriverRepository _driverRepo)
         {
-          _context = context;
-
+            CarRepo = _repo;
+            DriverRepo = _driverRepo;
         }
 
         // GET api/car
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Car>>> GetCars(int? startyear)
         {
-            var cars = from c in _context.Cars
-               select c;
-
-            if (startyear != null)
-            {
-                return await cars.Where(c => c.Year >= startyear)
-                    .Include(i => i.Driver).ToListAsync();
-            }
-
-            return await cars.Include(i => i.Driver).ToListAsync();
+            var cars = await CarRepo.GetAllCars(startyear);
+            return Ok(cars);
         }
 
         // GET api/car/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Car>> GetCar(int id)
         {
-            var Car = await _context.Cars.Include(i => i.Driver)
-                .FirstOrDefaultAsync(i => i.CarId == id);
-
-            if (Car == null)
+            var car = await CarRepo.GetById(id);
+            if (car == null)
             {
                 return NotFound();
             }
-
-            return Car;
+            return Ok(car);
         }
 
         // POST api/car
         [HttpPost]
         public async Task<ActionResult<Car>> PostCar(Car car)
         {
-            var driver = _context.Drivers.SingleOrDefault(m => m.DriverId == car.DriverId);
+            if (car == null)
+            {
+                return BadRequest();
+            }
+            
+            // Check for valid DriverID
+            var driver = await DriverRepo.GetById(car.DriverId);
             if (driver == null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
                 return BadRequest(ModelState);
             }
- 
-            _context.Cars.Add(car);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetCar), new { id = car.CarId }, car);
+
+            await CarRepo.Add(car);
+            return CreatedAtAction("GetCar", new { id = car.CarId }, car);
         }
 
         // PUT api/car/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, Car car)
+        public async Task<IActionResult> Update(int id, [FromBody] Car car)
         {
             if (id != car.CarId)
             {
                 return BadRequest();
             }
-
-            // Niet DRY moet dit in een helper? Of een private method van de CarController?
-            var driver = _context.Drivers.SingleOrDefault(m => m.DriverId == car.DriverId);
+            
+            // Check for valid DriverID
+            var driver = await DriverRepo.GetById(id);
             if (driver == null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
                 return BadRequest(ModelState);
             }
 
-            _context.Entry(car).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
+            var carObj = await CarRepo.GetById(id);
+            if (carObj == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                await CarRepo.UpdateById(id, car);
+            }
             return NoContent();
         }
 
@@ -95,17 +96,8 @@ namespace DeathRace.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-            var Car = await _context.Cars.FindAsync(id);
-
-            if (Car == null)
-            {
-                return NotFound();
-            }
-
-            _context.Cars.Remove(Car);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+          await CarRepo.Remove(id);
+          return NoContent();
         }
     }
 }

@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeathRace.Models;
 using DeathRace.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DeathRace.Repository
 {
@@ -22,15 +22,24 @@ namespace DeathRace.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Car>> GetAllCars()
+        public async Task<IEnumerable<Car>> GetAllCars(int? startyear)
         {
-           return await _context.Cars.ToListAsync();
+           var cars = from c in _context.Cars
+              select c;
+
+           if (startyear != null)
+           {
+               return await cars.Where(c => c.Year >= startyear)
+                   .Include(i => i.Driver).ToListAsync();
+           }
+
+           return await cars.Include(i => i.Driver).ToListAsync();
         }
 
         public async Task<Car> GetById(int id)
         {
-            return await _context.Cars
-                      .FirstOrDefaultAsync(i => i.CarId == id);
+          return await _context.Cars.Include(i => i.Driver)
+              .FirstOrDefaultAsync(i => i.CarId == id);
         }
 
         public async Task UpdateById(int id, Car car)

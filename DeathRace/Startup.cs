@@ -43,6 +43,7 @@ namespace DeathRace
                 (options => options.UseSqlite(connection));
             
             services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
               .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
