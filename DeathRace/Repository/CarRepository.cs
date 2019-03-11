@@ -24,12 +24,12 @@ namespace DeathRace.Repository
 
         public async Task<IEnumerable<Car>> GetAllCars()
         {
-           return await _context.Cars.Include(i => i.Cars).ToListAsync();
+           return await _context.Cars.ToListAsync();
         }
 
         public async Task<Car> GetById(int id)
         {
-            return await _context.Cars.Include(i => i.Cars)
+            return await _context.Cars
                       .FirstOrDefaultAsync(i => i.CarId == id);
         }
 
