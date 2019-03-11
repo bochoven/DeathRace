@@ -13,7 +13,7 @@ namespace DeathRace.Models
         public string Model { get; set; }
         [Required(ErrorMessage = "Required")]
         public string Type { get; set; }
-        [Range(1900, 3000)]
+        [Range(1900, 2100)]
         public int Year { get; set; }
 
         public int DriverId { get; set; }
