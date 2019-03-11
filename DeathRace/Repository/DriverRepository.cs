@@ -33,11 +33,25 @@ namespace DeathRace.Repository
                       .FirstOrDefaultAsync(i => i.DriverId == id);
         }
 
+        // public async Task UpdateById(int id, Driver driver)
+        // {
+        //     _context.Entry(driver).State = EntityState.Modified;
+        //     await _context.SaveChangesAsync();
+        // }
+        
         public async Task UpdateById(int id, Driver driver)
-        {
-            _context.Entry(driver).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        {            
+            var driverToUpdate = await _context.Drivers.SingleOrDefaultAsync(r => r.DriverId == id);
+            if (driverToUpdate != null)
+            {
+                driverToUpdate.GivenName = driver.GivenName;
+                driverToUpdate.Preposition = driver.Preposition;
+                driverToUpdate.LastName = driver.LastName;
+                driverToUpdate.DOB = driver.DOB;
+                await _context.SaveChangesAsync();
+            }
         }
+
 
         public async Task Remove(int id)
         {

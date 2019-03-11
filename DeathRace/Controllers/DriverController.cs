@@ -45,8 +45,16 @@ namespace DeathRace.Controllers
             {
                 return BadRequest();
             }
+            
+            var driverObj = await DriverRepo.GetById(driver.DriverId);
+            if (driverObj != null)
+            {
+                ModelState.AddModelError("DriverID Error", "DriverID is already registered");
+                return BadRequest(ModelState);
+            }
+
             await DriverRepo.Add(driver);
-            return CreatedAtAction("GetDriver", new { id = driver.DriverId }, driver);
+            return CreatedAtAction("GetById", new { id = driver.DriverId }, driver);
         }
 
         // PUT api/driver
@@ -73,7 +81,15 @@ namespace DeathRace.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await DriverRepo.Remove(id);
+            var driverObj = await DriverRepo.GetById(id);
+            if (driverObj == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                await DriverRepo.Remove(id);
+            }
             return NoContent();
         }
     }
