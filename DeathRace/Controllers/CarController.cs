@@ -31,8 +31,8 @@ namespace DeathRace.Controllers
         }
 
         // GET api/car/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Car>> GetCar(int id)
+        [HttpGet("{id}", Name = "GetCar")]
+        public async Task<IActionResult> GetById(int id)
         {
             var car = await CarRepo.GetById(id);
             if (car == null)
