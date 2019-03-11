@@ -43,9 +43,17 @@ namespace DeathRace.Repository
         }
 
         public async Task UpdateById(int id, Car car)
-        {
-            _context.Entry(car).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        {            
+            var carToUpdate = await _context.Cars.SingleOrDefaultAsync(r => r.CarId == id);
+            if (carToUpdate != null)
+            {
+                carToUpdate.Brand = car.Brand;
+                carToUpdate.Model = car.Model;
+                carToUpdate.Type = car.Type;
+                carToUpdate.Year = car.Year;
+                carToUpdate.DriverId = car.DriverId;
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task Remove(int id)

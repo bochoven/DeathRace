@@ -60,7 +60,7 @@ namespace DeathRace.Controllers
             }
 
             await CarRepo.Add(car);
-            return CreatedAtAction("GetCar", new { id = car.CarId }, car);
+            return CreatedAtAction("GetById", new { id = car.CarId }, car);
         }
 
         // PUT api/car/5
@@ -73,7 +73,7 @@ namespace DeathRace.Controllers
             }
             
             // Check for valid DriverID
-            var driver = await DriverRepo.GetById(id);
+            var driver = await DriverRepo.GetById(car.DriverId);
             if (driver == null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
@@ -96,8 +96,17 @@ namespace DeathRace.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-          await CarRepo.Remove(id);
-          return NoContent();
+            var carObj = await CarRepo.GetById(id);
+            if (carObj == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                await CarRepo.Remove(id);
+            }
+
+            return NoContent();
         }
     }
 }
