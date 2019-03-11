@@ -29,6 +29,7 @@ function updateOwners(year = null) {
         year: car.year
       })
       car.driver.cars = carList;
+      car.driver.preposition = car.driver.preposition ? car.driver.preposition : '';
       driverList[car.driver.driverId] = car.driver;
     });
 
