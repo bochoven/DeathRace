@@ -71,6 +71,10 @@ namespace DeathRace
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "DeathRace API V1");
             });
+            
+            // Serve static files
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseHttpsRedirection();
             app.UseMvc();
