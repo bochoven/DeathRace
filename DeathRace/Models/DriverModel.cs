@@ -14,7 +14,7 @@ namespace DeathRace.Models
         public string LastName { get; set; }
         [DataType(DataType.Date)]
         [Display(Name = "Birth Date")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
 
         public ICollection<Car> Cars { get; set; }
