@@ -18,52 +18,42 @@ function updateOwners(year = null) {
   
   // Retrieve Driver list and filtered car list
   $.when( $.ajax( "api/Driver" ), $.ajax( url ) ).done(function( a1, a2 ) {
-      allDriverList = a1[ 0 ];
-      filteredCarList = a2[ 0 ];
-      var filteredDriverList = [];
-      var driverIdList = [];
-      
-      // Get driverIdList from filteredCarList
-      $.each( filteredCarList, function( index, car ){
-        if(driverIdList.indexOf(car.driver.driverId) === -1) {
-          driverIdList.push(car.driver.driverId);
-        }
+    allDriverList = a1[ 0 ];
+    filteredCarList = a2[ 0 ];
+    var filteredDriverList = [];
+    var driverIdList = [];
+    
+    // Get driverIdList from filteredCarList
+    $.each( filteredCarList, function( index, car ){
+      if(driverIdList.indexOf(car.driver.driverId) === -1) {
+        driverIdList.push(car.driver.driverId);
+      }
+    });
+    
+    // Generate filteredDriverList from driverIdList
+    $.each( allDriverList, function( index, driver ){
+      if(driverIdList.indexOf(driver.driverId) !== -1){
+        // Fix preposition
+        driver.preposition = driver.preposition ? driver.preposition : '';
+        filteredDriverList.push(driver);
+      }
+    });
+    
+    // Render
+    $('ul.driverlist').empty();
+    $.each( filteredDriverList, function( id, driver ){
+      var cars = $('<ul>');
+      $.each( driver.cars, function( id, car ){
+          cars.append(
+            $('<li>').text(car.brand + ', ' + car.model + ', ' + car.type + ', ' + car.year)
+          )
       });
-      
-      $.each( allDriverList, function( index, driver ){
-        console.log(driver)
-      });
-  }
+      $('ul.driverlist').append(
+        $('<li>').text(driver.givenName + ' ' + driver.preposition + ' ' + driver.lastName)
+          .append( cars)
+      );
+    });
+
+  });
   
-  $.get( "api/Driver", function( data ) {
-    
-    
-    
-    allDriverList = data;
-    
-    $.get( url, function( data ) {
-      $('ul.driverlist').empty();
-      var driverList = {};
-      $.each( data, function( index, car ){
-        car.driver.preposition = car.driver.preposition ? car.driver.preposition : '';
-        driverList[car.driver.driverId] = car.driver;
-      });
-
-      $.each( driverList, function( id, driver ){
-        var cars = $('<ul>');
-        $.each( driver.cars, function( id, car ){
-            cars.append(
-              $('<li>').text(car.brand + ', ' + car.model + ', ' + car.type + ', ' + car.year)
-            )
-        });
-        $('ul.driverlist').append(
-          $('<li>').text(driver.givenName + ' ' + driver.preposition + ' ' + driver.lastName)
-            .append( cars)
-        );
-      });
-
-  });
-
-
-  });
 }
