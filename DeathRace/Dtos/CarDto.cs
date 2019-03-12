@@ -18,16 +18,6 @@ namespace DeathRace.Models
         public int Year { get; set; }
         [Required(ErrorMessage = "Required")]
         public int DriverId { get; set; }
-        
-        public CarDto(Car x)
-        {
-            CarId = x.CarId;
-            Brand = x.Brand;
-            Model = x.Model;
-            Type = x.Type;
-            Year = x.Year;
-            DriverId = x.DriverId;
-        }
-        
+
     }
 }
