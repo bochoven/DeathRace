@@ -22,23 +22,24 @@ namespace DeathRace.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Car>> GetAllCars(int? startyear)
+        public async Task<IEnumerable<CarDto>> GetAllCars(int? startyear)
         {
            var cars = from c in _context.Cars
               select c;
 
            if (startyear != null)
            {
-               return await cars.Where(c => c.Year >= startyear)
-                   .Include(i => i.Driver).ToListAsync();
+               return await cars.Select(x=> new CarDto(x))
+                  .Where(c => c.Year >= startyear)
+                  .ToListAsync();
            }
 
-           return await cars.Include(i => i.Driver).ToListAsync();
+           return await cars.Select(x=> new CarDto(x)).ToListAsync();
         }
 
-        public async Task<Car> GetById(int id)
+        public async Task<CarDto> GetById(int id)
         {
-          return await _context.Cars.Include(i => i.Driver)
+          return await _context.Cars.Select(x => new CarDto(x))
               .FirstOrDefaultAsync(i => i.CarId == id);
         }
 

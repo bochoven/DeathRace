@@ -24,7 +24,7 @@ namespace DeathRace.Controllers
 
         // GET api/car
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars(int? startyear)
+        public async Task<ActionResult<IQueryable<CarDto>>> GetCars(int? startyear)
         {
             var cars = await CarRepo.GetAllCars(startyear);
             return Ok(cars);
