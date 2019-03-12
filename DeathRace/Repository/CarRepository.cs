@@ -4,21 +4,25 @@ using DeathRace.Models;
 using DeathRace.Contexts;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace DeathRace.Repository
 {
     public class CarRepository : ICarRepository
     {
         private readonly DeathRaceContext _context;
+        private readonly IMapper _mapper;
 
-        public CarRepository(DeathRaceContext context)
+        public CarRepository(DeathRaceContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task Add(Car newCar)
+        public async Task Add(CarDto newCar)
         {
-            await _context.Cars.AddAsync(newCar);
+            await _context.Cars.AddAsync(_mapper.Map<Car>(newCar));
             await _context.SaveChangesAsync();
         }
 
@@ -29,21 +33,22 @@ namespace DeathRace.Repository
 
            if (startyear != null)
            {
-               return await cars.Select(x=> new CarDto(x))
+               return await cars
                   .Where(c => c.Year >= startyear)
+                  .ProjectTo<CarDto>(_mapper.ConfigurationProvider)
                   .ToListAsync();
            }
 
-           return await cars.Select(x=> new CarDto(x)).ToListAsync();
+           return await cars.ProjectTo<CarDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<CarDto> GetById(int id)
         {
-          return await _context.Cars.Select(x => new CarDto(x))
+          return await _context.Cars.ProjectTo<CarDto>(_mapper.ConfigurationProvider)
               .FirstOrDefaultAsync(i => i.CarId == id);
         }
 
-        public async Task UpdateById(int id, Car car)
+        public async Task UpdateById(int id, CarDto car)
         {            
             var carToUpdate = await _context.Cars.SingleOrDefaultAsync(r => r.CarId == id);
             if (carToUpdate != null)

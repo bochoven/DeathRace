@@ -23,6 +23,7 @@ namespace DeathRace.Controllers
         }
 
         // GET api/car
+        [Route("~/api/cars")]
         [HttpGet]
         public async Task<ActionResult<IQueryable<CarDto>>> GetCars(int? startyear)
         {
@@ -32,9 +33,9 @@ namespace DeathRace.Controllers
 
         // GET api/car/5
         [HttpGet("{id}", Name = "GetCar")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<CarDto>> GetById(int id)
         {
-            var car = await CarRepo.GetById(id);
+            CarDto car = await CarRepo.GetById(id);
             if (car == null)
             {
                 return NotFound();
@@ -44,7 +45,7 @@ namespace DeathRace.Controllers
 
         // POST api/car
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(Car car)
+        public async Task<ActionResult<CarDto>> PostCar(CarDto car)
         {
             if (car == null)
             {
@@ -65,7 +66,7 @@ namespace DeathRace.Controllers
 
         // PUT api/car/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] Car car)
+        public async Task<IActionResult> Update(int id, [FromBody] CarDto car)
         {
             if (id != car.CarId)
             {
