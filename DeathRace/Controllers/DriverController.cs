@@ -10,18 +10,18 @@ namespace DeathRace.Controllers
     [ApiController]
     public class DriverController : ControllerBase
     {
-        private readonly IDriverRepository DriverRepo;
+        private readonly IDriverRepository _repo;
 
-        public DriverController(IDriverRepository _repo)
+        public DriverController(IDriverRepository DriverRepo)
         {
-          DriverRepo = _repo;
+          _repo = DriverRepo;
         }
 
         // GET api/driver
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
-            var drivers = await DriverRepo.GetAllDrivers();
+            var drivers = await _repo.GetAllDrivers();
             return Ok(drivers);
         }
 
@@ -29,7 +29,7 @@ namespace DeathRace.Controllers
         [HttpGet("{id}", Name = "GetDriver")]
         public async Task<IActionResult> GetById(int id)
         {
-            var driver = await DriverRepo.GetById(id);
+            var driver = await _repo.GetById(id);
             if (driver == null)
             {
                 return NotFound();
@@ -46,14 +46,14 @@ namespace DeathRace.Controllers
                 return BadRequest();
             }
             
-            var driverObj = await DriverRepo.GetById(driver.DriverId);
+            var driverObj = await _repo.GetById(driver.DriverId);
             if (driverObj != null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is already registered");
                 return BadRequest(ModelState);
             }
 
-            await DriverRepo.Add(driver);
+            await _repo.Add(driver);
             return CreatedAtAction("GetById", new { id = driver.DriverId }, driver);
         }
 
@@ -65,14 +65,14 @@ namespace DeathRace.Controllers
             {
                 return BadRequest();
             }
-            var driverObj = await DriverRepo.GetById(id);
+            var driverObj = await _repo.GetById(id);
             if (driverObj == null)
             {
                 return NotFound();
             }
             else
             {
-                await DriverRepo.UpdateById(id, driver);
+                await _repo.UpdateById(id, driver);
             }
             return NoContent();
         }
@@ -81,14 +81,14 @@ namespace DeathRace.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var driverObj = await DriverRepo.GetById(id);
+            var driverObj = await _repo.GetById(id);
             if (driverObj == null)
             {
                 return NotFound();
             }
             else
             {
-                await DriverRepo.Remove(id);
+                await _repo.Remove(id);
             }
             return NoContent();
         }
