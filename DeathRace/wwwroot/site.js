@@ -25,8 +25,8 @@ function updateOwners(year = null) {
     
     // Get driverIdList from filteredCarList
     $.each( filteredCarList, function( index, car ){
-      if(driverIdList.indexOf(car.driver.driverId) === -1) {
-        driverIdList.push(car.driver.driverId);
+      if(driverIdList.indexOf(car.driverId) === -1) {
+        driverIdList.push(car.driverId);
       }
     });
     
