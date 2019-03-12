@@ -13,13 +13,13 @@ namespace DeathRace.Controllers
     [ApiController]
     public class CarController : ControllerBase
     {
-        private readonly ICarRepository CarRepo;
-        private readonly IDriverRepository DriverRepo;
+        private readonly ICarRepository _repo;
+        private readonly IDriverRepository _driverRepo;
 
-        public CarController(ICarRepository _repo, IDriverRepository _driverRepo)
+        public CarController(ICarRepository CarRepo, IDriverRepository DriverRepo)
         {
-            CarRepo = _repo;
-            DriverRepo = _driverRepo;
+            _repo = CarRepo;
+            _driverRepo = DriverRepo;
         }
 
         // GET api/car
@@ -27,7 +27,7 @@ namespace DeathRace.Controllers
         [HttpGet]
         public async Task<ActionResult<IQueryable<CarDto>>> GetCars(int? startyear)
         {
-            var cars = await CarRepo.GetAllCars(startyear);
+            var cars = await _repo.GetAllCars(startyear);
             return Ok(cars);
         }
 
@@ -35,7 +35,7 @@ namespace DeathRace.Controllers
         [HttpGet("{id}", Name = "GetCar")]
         public async Task<ActionResult<CarDto>> GetById(int id)
         {
-            CarDto car = await CarRepo.GetById(id);
+            CarDto car = await _repo.GetById(id);
             if (car == null)
             {
                 return NotFound();
@@ -53,14 +53,14 @@ namespace DeathRace.Controllers
             }
             
             // Check for valid DriverID
-            var driver = await DriverRepo.GetById(car.DriverId);
+            var driver = await _driverRepo.GetById(car.DriverId);
             if (driver == null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
                 return BadRequest(ModelState);
             }
 
-            await CarRepo.Add(car);
+            await _repo.Add(car);
             return CreatedAtAction("GetById", new { id = car.CarId }, car);
         }
 
@@ -74,21 +74,21 @@ namespace DeathRace.Controllers
             }
             
             // Check for valid DriverID
-            var driver = await DriverRepo.GetById(car.DriverId);
+            var driver = await _driverRepo.GetById(car.DriverId);
             if (driver == null)
             {
                 ModelState.AddModelError("DriverID Error", "DriverID is invalid or missing");
                 return BadRequest(ModelState);
             }
 
-            var carObj = await CarRepo.GetById(id);
+            var carObj = await _repo.GetById(id);
             if (carObj == null)
             {
                 return NotFound();
             }
             else
             {
-                await CarRepo.UpdateById(id, car);
+                await _repo.UpdateById(id, car);
             }
             return NoContent();
         }
@@ -97,14 +97,14 @@ namespace DeathRace.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCar(int id)
         {
-            var carObj = await CarRepo.GetById(id);
+            var carObj = await _repo.GetById(id);
             if (carObj == null)
             {
                 return NotFound();
             }
             else
             {
-                await CarRepo.Remove(id);
+                await _repo.Remove(id);
             }
 
             return NoContent();
