@@ -20,7 +20,7 @@ namespace DeathRace.Controllers
         // GET api/driver
         [Route("~/api/drivers")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
+        public async Task<ActionResult<IEnumerable<DriverDto>>> GetDrivers()
         {
             var drivers = await _repo.GetAllDrivers();
             return Ok(drivers);

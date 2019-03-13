@@ -1,36 +1,44 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeathRace.Models;
 using DeathRace.Contexts;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace DeathRace.Repository
 {
     public class DriverRepository : IDriverRepository
     {
         private readonly DeathRaceContext _context;
+        private readonly IMapper _mapper;
 
-        public DriverRepository(DeathRaceContext context)
+        public DriverRepository(DeathRaceContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task Add(Driver newDriver)
+        public async Task Add(DriverDto newDriver)
         {
-            await _context.Drivers.AddAsync(newDriver);
+            await _context.Drivers.AddAsync(_mapper.Map<Driver>(newDriver));
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Driver>> GetAllDrivers()
+        public async Task<IEnumerable<DriverDto>> GetAllDrivers()
         {
-           return await _context.Drivers.Include(i => i.Cars).ToListAsync();
+           return await _context.Drivers
+                .Include(i => i.Cars)
+                .ProjectTo<DriverDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
-        public async Task<Driver> GetById(int id)
+        public async Task<DriverDto> GetById(int id)
         {
-            return await _context.Drivers.Include(i => i.Cars)
-                      .FirstOrDefaultAsync(i => i.DriverId == id);
+            return await _context.Drivers
+                .Include(i => i.Cars)
+                .ProjectTo<DriverDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(i => i.DriverId == id);
         }
 
         // public async Task UpdateById(int id, Driver driver)
@@ -39,7 +47,7 @@ namespace DeathRace.Repository
         //     await _context.SaveChangesAsync();
         // }
         
-        public async Task UpdateById(int id, Driver driver)
+        public async Task UpdateById(int id, DriverDto driver)
         {            
             var driverToUpdate = await _context.Drivers.SingleOrDefaultAsync(r => r.DriverId == id);
             if (driverToUpdate != null)

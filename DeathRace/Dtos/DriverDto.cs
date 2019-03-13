@@ -16,7 +16,7 @@ namespace DeathRace.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
 
-        public ICollection<Car> Cars { get; }
+        public ICollection<CarDto> Cars { get; set;  }
 
     }
 }

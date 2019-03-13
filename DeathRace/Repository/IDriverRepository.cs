@@ -6,10 +6,10 @@ namespace DeathRace.Repository
 {
     public interface IDriverRepository
     {
-        Task Add(Driver item);
-        Task<IEnumerable<Driver>> GetAllDrivers();
-        Task<Driver> GetById(int id);
+        Task Add(DriverDto item);
+        Task<IEnumerable<DriverDto>> GetAllDrivers();
+        Task<DriverDto> GetById(int id);
         Task Remove(int id);
-        Task UpdateById(int id, Driver driver);
+        Task UpdateById(int id, DriverDto driver);
     }
 }
