@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
-using System;
 using System.Threading.Tasks;
 using DeathRace.Models;
 using DeathRace.Repository;
 
 namespace DeathRace.Controllers
-{    
+{
     [Route("api/[controller]")]
     [ApiController]
     public class CarController : ControllerBase
