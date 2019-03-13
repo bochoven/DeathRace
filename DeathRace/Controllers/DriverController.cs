@@ -18,6 +18,7 @@ namespace DeathRace.Controllers
         }
 
         // GET api/driver
+        [Route("~/api/drivers")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Driver>>> GetDrivers()
         {
@@ -27,7 +28,7 @@ namespace DeathRace.Controllers
 
         // GET api/driver/5
         [HttpGet("{id}", Name = "GetDriver")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<Driver>> GetById(int id)
         {
             var driver = await _repo.GetById(id);
             if (driver == null)
@@ -39,7 +40,7 @@ namespace DeathRace.Controllers
 
         // POST api/val   ues
         [HttpPost]
-        public async Task<ActionResult<Driver>> PostDriver(Driver driver)
+        public async Task<ActionResult<DriverDto>> PostDriver(DriverDto driver)
         {
             if (driver == null)
             {
@@ -59,7 +60,7 @@ namespace DeathRace.Controllers
 
         // PUT api/driver
         [HttpPut("{id}")]
-        public async Task<ActionResult<Driver>> Update(int id, [FromBody] Driver driver)
+        public async Task<ActionResult<DriverDto>> Update(int id, [FromBody] DriverDto driver)
         {
             if (id != driver.DriverId)
             {
