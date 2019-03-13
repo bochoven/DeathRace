@@ -25,7 +25,7 @@ namespace DeathRace.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<DriverDto>> GetAllDrivers()
+        public async Task<IEnumerable<DriverDto>> GetAllDrivers(int? owns_car_with_buildyear_starting)
         {
            return await _context.Drivers
                 .Include(i => i.Cars)
