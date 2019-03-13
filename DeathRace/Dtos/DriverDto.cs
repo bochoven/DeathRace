@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -16,6 +15,8 @@ namespace DeathRace.Models
         [Display(Name = "Birth Date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public System.DateTime DOB { get; set; }
+
+        public ICollection<Car> Cars { get; }
 
     }
 }
